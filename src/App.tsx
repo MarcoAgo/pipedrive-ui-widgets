@@ -13,7 +13,7 @@ function App() {
     const sdk = await new AppExtensionsSDK().initialize({
       size: {
         width: 500,
-        height: 400,
+        height: 700,
       },
     });
 
