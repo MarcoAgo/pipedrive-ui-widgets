@@ -10,7 +10,12 @@ function App() {
 
   async function initPipedrive() {
     // If your URL already includes ?id=..., SDK finds it automatically
-    const sdk = await new AppExtensionsSDK().initialize();
+    const sdk = await new AppExtensionsSDK().initialize({
+      size: {
+        width: 800,
+        height: 700,
+      },
+    });
 
     // Now you can use SDK features (e.g., send commands, resize, show snackbar)
     console.log("Pipedrive SDK ready!", sdk);
