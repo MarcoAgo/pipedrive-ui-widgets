@@ -12,8 +12,8 @@ function App() {
     // If your URL already includes ?id=..., SDK finds it automatically
     const sdk = await new AppExtensionsSDK().initialize({
       size: {
-        width: 800,
-        height: 700,
+        width: 500,
+        height: 400,
       },
     });
 
