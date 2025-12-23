@@ -34,6 +34,9 @@ function App() {
         "https://app.reverse.hr/api/v1/auth/users/login-tokens",
         {
           method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify({
             email: (event.target as HTMLFormElement).email.value,
           }),
