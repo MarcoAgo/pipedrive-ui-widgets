@@ -23,6 +23,8 @@ function App() {
 
   useEffect(() => {
     initPipedrive();
+    const sdk = window.pipedriveUI;
+    console.log("SDK:", sdk);
   }, []);
 
   async function handleLogin(event: React.FormEvent<HTMLFormElement>) {
