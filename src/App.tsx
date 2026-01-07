@@ -3,6 +3,7 @@ import "./App.css";
 
 import AppExtensionsSDK, { Command } from "@pipedrive/app-extensions-sdk";
 import { usePipedrive } from "./store/use-pipedrive";
+import { getPipedriveContext } from "./helpers/get-pipedrive-context";
 
 function App() {
   const { token, sdk, setSdk, setToken } = usePipedrive();
@@ -33,7 +34,8 @@ function App() {
     }
 
     const result = await sdk.execute(Command.GET_SIGNED_TOKEN);
-    console.log("SDK:", sdk);
+    const pipedriveContext = getPipedriveContext();
+    console.log(pipedriveContext);
     setToken(result.token);
   }
 
