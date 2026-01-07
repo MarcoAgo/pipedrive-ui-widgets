@@ -5,10 +5,9 @@ import AppExtensionsSDK, { Command } from "@pipedrive/app-extensions-sdk";
 import { usePipedrive } from "./store/use-pipedrive";
 
 function App() {
-  const { token, sdk, setSdk } = usePipedrive();
+  const { token, sdk, setSdk, setToken } = usePipedrive();
 
   async function initPipedrive() {
-    // If your URL already includes ?id=..., SDK finds it automatically
     const sdk = await new AppExtensionsSDK().initialize({
       size: {
         width: 500,
@@ -34,7 +33,8 @@ function App() {
     }
 
     const result = await sdk.execute(Command.GET_SIGNED_TOKEN);
-    console.log("Result:", result);
+    console.log("SDK:", sdk);
+    setToken(result.token);
   }
 
   return (
