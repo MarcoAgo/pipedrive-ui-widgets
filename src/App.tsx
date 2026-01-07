@@ -4,9 +4,10 @@ import "./App.css";
 import AppExtensionsSDK, { Command } from "@pipedrive/app-extensions-sdk";
 import { usePipedrive } from "./store/use-pipedrive";
 import { getPipedriveContext } from "./helpers/get-pipedrive-context";
+import { fetchContextEntity } from "./helpers/fetch-context-entity";
 
 function App() {
-  const { token, sdk, setSdk, setToken } = usePipedrive();
+  const { token, sdk, setSdk, setToken, setContext } = usePipedrive();
 
   async function initPipedrive() {
     const sdk = await new AppExtensionsSDK().initialize({
@@ -35,8 +36,12 @@ function App() {
 
     const result = await sdk.execute(Command.GET_SIGNED_TOKEN);
     const pipedriveContext = getPipedriveContext();
-    console.log(pipedriveContext);
+
     setToken(result.token);
+    setContext(pipedriveContext);
+
+    const entity = await fetchContextEntity(pipedriveContext, result.token);
+    console.log(entity);
   }
 
   return (
