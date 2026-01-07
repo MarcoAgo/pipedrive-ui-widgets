@@ -9,11 +9,8 @@ const RESOURCE_MAP: Record<string, string> = {
   organization: "organizations",
 };
 
-export async function fetchContextEntity(
-  context: PipedriveContext,
-  token: string
-) {
-  const { resource, entityId } = context;
+export async function fetchContextEntity(context: PipedriveContext) {
+  const { resource, entityId, token } = context;
 
   if (!resource || !entityId) {
     throw new Error("Resource and entityId are required");

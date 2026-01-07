@@ -7,6 +7,7 @@ export interface PipedriveContext {
   entityId: string | null;
   userId: string | null;
   companyId: string | null;
+  token: string | null;
 }
 
 export interface PipedriveStore {

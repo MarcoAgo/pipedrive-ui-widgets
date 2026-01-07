@@ -40,7 +40,7 @@ function App() {
     setToken(result.token);
     setContext(pipedriveContext);
 
-    const entity = await fetchContextEntity(pipedriveContext, result.token);
+    const entity = await fetchContextEntity(pipedriveContext);
     console.log(entity);
   }
 

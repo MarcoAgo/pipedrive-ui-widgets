@@ -7,5 +7,6 @@ export function getPipedriveContext() {
     entityId: contextParams.get("selectedIds"), // ID entità
     userId: contextParams.get("userId"),
     companyId: contextParams.get("companyId"),
+    token: contextParams.get("token"),
   };
 }
