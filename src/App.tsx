@@ -5,7 +5,7 @@ import AppExtensionsSDK, { Command } from "@pipedrive/app-extensions-sdk";
 import { usePipedrive } from "./store/use-pipedrive";
 
 function App() {
-  const { sdk, setSdk } = usePipedrive();
+  const { token, setToken, setSdk } = usePipedrive();
 
   async function initPipedrive() {
     // If your URL already includes ?id=..., SDK finds it automatically
@@ -16,6 +16,9 @@ function App() {
       },
     });
 
+    const result = await sdk.execute(Command.GET_SIGNED_TOKEN);
+    console.log("Result:", result);
+    setToken(result.token);
     setSdk(sdk);
   }
 
@@ -23,12 +26,7 @@ function App() {
     initPipedrive();
   }, []);
 
-  useEffect(() => {
-    if (sdk) {
-      const result = sdk.execute(Command.GET_SIGNED_TOKEN);
-      console.log("Result:", result);
-    }
-  }, [sdk]);
+  useEffect(() => {}, [token]);
 
   async function handleLogin(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
