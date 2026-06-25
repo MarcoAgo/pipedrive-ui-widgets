@@ -24,7 +24,10 @@ function App() {
     initPipedrive();
   }, []);
 
-  useEffect(() => {}, [token]);
+  useEffect(() => {
+    // fai qualcosa con il token
+    console.log(token);
+  }, [token]);
 
   async function handleGetToken(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
@@ -39,6 +42,8 @@ function App() {
 
     setToken(result.token);
     setContext(pipedriveContext);
+
+    console.log(pipedriveContext);
 
     const entity = await fetchContextEntity(pipedriveContext);
     console.log(entity);
