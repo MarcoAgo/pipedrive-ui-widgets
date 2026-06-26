@@ -1,0 +1,42 @@
+.discarded-phone-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--error-color-20);
+  border: 1px solid var(--error-color-100);
+  border-radius: 10px;
+  padding: 10px 14px;
+
+  &__close-icon {
+    flex-shrink: 0;
+    color: var(--error-color-110);
+  }
+
+  &__number {
+    flex: 1;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--error-color-110);
+    text-decoration: line-through;
+    letter-spacing: 0.02em;
+  }
+
+  &__undo-btn {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border: 1.5px dashed var(--error-color-100) !important;
+    border-radius: 50% !important;
+    background: transparent !important;
+    color: var(--error-color-110) !important;
+    padding: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: unset !important;
+
+    &:hover {
+      background: var(--error-color-40) !important;
+    }
+  }
+}

@@ -1,0 +1,9 @@
+.search-phone-button {
+  width: 100%;
+  border-radius: 100px !important;
+
+  &--retry {
+    border-style: dashed !important;
+    background: transparent !important;
+  }
+}

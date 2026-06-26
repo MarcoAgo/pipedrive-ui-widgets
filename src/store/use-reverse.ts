@@ -1,4 +1,4 @@
-import { create } from "zustand";
+import { create } from 'zustand';
 
 export interface ReverseStore {
   token: string | null;
@@ -8,7 +8,7 @@ export interface ReverseStore {
   setRefreshToken: (refreshToken: string) => void;
 }
 
-export const useReverse = create<ReverseStore>((set) => ({
+export const useReverse = create<ReverseStore>(set => ({
   token: null,
   refreshToken: null,
 

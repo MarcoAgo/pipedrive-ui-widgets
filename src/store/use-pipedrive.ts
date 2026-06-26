@@ -1,5 +1,5 @@
-import type AppExtensionsSDK from "@pipedrive/app-extensions-sdk";
-import { create } from "zustand";
+import type AppExtensionsSDK from '@pipedrive/app-extensions-sdk';
+import { create } from 'zustand';
 
 export interface PipedriveContext {
   selectedIds: string | null;
@@ -20,7 +20,7 @@ export interface PipedriveStore {
   setContext: (context: PipedriveContext) => void;
 }
 
-export const usePipedrive = create<PipedriveStore>((set) => ({
+export const usePipedrive = create<PipedriveStore>(set => ({
   token: null,
   sdk: null,
   context: null,
