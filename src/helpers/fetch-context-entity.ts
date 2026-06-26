@@ -1,57 +1,29 @@
 import type { PipedriveContext } from "../store/use-pipedrive";
 
-const PIPEDRIVE_API_URL = "https://api.pipedrive.com/v1";
-
-// Map resource types to correct Pipedrive API endpoint names
-const RESOURCE_MAP: Record<string, string> = {
-  deal: "deals",
-  person: "persons",
-  organization: "organizations",
-};
+const PROXY_URL = import.meta.env.VITE_PROXY_URL;
 
 export async function fetchContextEntity(context: PipedriveContext) {
-  const { resource, entityId, token } = context;
+  const { resource, entityId, companyId } = context;
 
-  if (!resource || !entityId) {
-    throw new Error("Resource and entityId are required");
+  if (!resource || !entityId || !companyId) {
+    throw new Error("resource, entityId e companyId sono obbligatori");
   }
 
-  // Map resource to correct API endpoint name
-  const apiResource = RESOURCE_MAP[resource.toLowerCase()];
-  if (!apiResource) {
+  const response = await fetch(
+    `${PROXY_URL}/.netlify/functions/pipedrive-proxy`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ companyId, resource, entityId }),
+    },
+  );
+
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}));
     throw new Error(
-      `Invalid resource type: ${resource}. Supported types: deal, person, organization`
+      `Proxy error ${response.status}: ${err.error || response.statusText}`,
     );
   }
 
-  try {
-    const response = await fetch(
-      `${PIPEDRIVE_API_URL}/${apiResource}/${entityId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(
-        `Pipedrive API error: ${response.status} ${response.statusText}. ${
-          errorData.error || ""
-        }`
-      );
-    }
-
-    const data = await response.json();
-
-    // Pipedrive API returns data in a 'data' property
-    return data.data || data;
-  } catch (error) {
-    if (error instanceof Error) {
-      throw error;
-    }
-    throw new Error(`Failed to fetch context entity: ${String(error)}`);
-  }
+  return response.json();
 }
