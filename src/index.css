@@ -14,9 +14,14 @@
   --status-done-fg: #3a502a;
 }
 
+html {
+  height: 100%;
+}
+
 body {
   margin: 0;
   padding: 0;
+  height: 100%;
   width: 100%;
   font-family:
     -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
@@ -28,9 +33,11 @@ body {
 
 #root {
   width: 100%;
+  height: 100%;
 }
 
 .app-container {
+  height: 100%;
   max-width: 480px;
   margin: 0 auto;
   padding: 16px;
