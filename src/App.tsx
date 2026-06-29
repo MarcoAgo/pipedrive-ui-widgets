@@ -3,11 +3,15 @@ import AppExtensionsSDK, { Command } from '@pipedrive/app-extensions-sdk';
 import { usePipedrive } from './store/use-pipedrive';
 import { getPipedriveContext } from './helpers/get-pipedrive-context';
 import { fetchContextEntity } from './helpers/fetch-context-entity';
+import {
+  parsePipedrivePerson,
+  type TPipedrivePersonRaw,
+} from './helpers/parse-pipedrive-person';
 import { PhoneFinderWidget } from './components/PhoneFinderWidget';
 import './index.css';
 
 function App(): JSX.Element {
-  const { setSdk, setToken, setContext, context } = usePipedrive();
+  const { setSdk, setToken, setContext, setPerson, context } = usePipedrive();
 
   useEffect(() => {
     async function initPipedrive(): Promise<void> {
@@ -19,7 +23,8 @@ function App(): JSX.Element {
       setToken(result.token);
       setContext(pipedriveContext);
 
-      await fetchContextEntity(pipedriveContext);
+      const raw = await fetchContextEntity(pipedriveContext);
+      setPerson(parsePipedrivePerson(raw as TPipedrivePersonRaw));
     }
 
     initPipedrive();

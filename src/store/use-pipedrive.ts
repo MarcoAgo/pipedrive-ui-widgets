@@ -1,5 +1,6 @@
 import type AppExtensionsSDK from '@pipedrive/app-extensions-sdk';
 import { create } from 'zustand';
+import type { TParsedPerson } from '../helpers/parse-pipedrive-person';
 
 export interface PipedriveContext {
   selectedIds: string | null;
@@ -14,18 +15,22 @@ export interface PipedriveStore {
   token: string | null;
   sdk: AppExtensionsSDK | null;
   context: PipedriveContext | null;
+  person: TParsedPerson | null;
 
   setSdk: (sdk: AppExtensionsSDK) => void;
   setToken: (token: string) => void;
   setContext: (context: PipedriveContext) => void;
+  setPerson: (person: TParsedPerson) => void;
 }
 
 export const usePipedrive = create<PipedriveStore>(set => ({
   token: null,
   sdk: null,
   context: null,
+  person: null,
 
   setSdk: (sdk: AppExtensionsSDK) => set({ sdk }),
   setToken: (token: string) => set({ token }),
   setContext: (context: PipedriveContext) => set({ context }),
+  setPerson: (person: TParsedPerson) => set({ person }),
 }));
