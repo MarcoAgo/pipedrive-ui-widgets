@@ -4,6 +4,16 @@
   box-sizing: border-box;
 }
 
+:root {
+  --ink-700: #19233e;
+  --border-subtle: var(--grey-20);
+  --magenta-20: #f6e1ea;
+  --magenta-100: #ac3c72;
+  --status-done-bg: #dfebda;
+  --status-done-border: #7fb069;
+  --status-done-fg: #3a502a;
+}
+
 body {
   margin: 0;
   padding: 0;

@@ -13,17 +13,18 @@ export const SearchPhoneButton = ({
     ? `Cerca ancora (${remainingAttempts} ${remainingAttempts === 1 ? 'tentativo rimasto' : 'tentativi rimasti'})`
     : 'Cerca un numero';
 
-  const className = isRetry
-    ? 'search-phone-button search-phone-button--retry'
-    : 'search-phone-button';
-
   return (
     <Button
       variant={isRetry ? 'outline' : 'primary'}
-      size="medium"
+      size="small"
+      isFullWidth
       leftIcon={isLoading ? 'icn-loading' : 'icn-search'}
       isDisabled={isLoading || remainingAttempts === 0}
-      className={className}
+      className={
+        isRetry
+          ? 'search-phone-button search-phone-button--retry'
+          : 'search-phone-button'
+      }
       onClick={onSearch}
     >
       {label}

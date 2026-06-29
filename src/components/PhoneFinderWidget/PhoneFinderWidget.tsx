@@ -55,7 +55,7 @@ export const PhoneFinderWidget = ({
   const isPending = status === 'pending';
   const isSaved = status === 'saved';
   const hasDiscarded = discardedNumbers.length > 0;
-  const showSeparator = isPending && hasDiscarded;
+  const showSeparator = hasDiscarded;
   const showSearchButton = !isSaved && remainingAttempts > 0;
   const isSearchRetry = hasDiscarded || isPending;
 

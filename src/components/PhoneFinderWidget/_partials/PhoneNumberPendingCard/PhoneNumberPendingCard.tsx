@@ -14,17 +14,18 @@ export const PhoneNumberPendingCard = ({
       <p className="phone-number-pending-card__number">{phoneNumber}</p>
       <div className="phone-number-pending-card__actions">
         <Button
-          variant="outline"
-          size="medium"
+          variant="primary"
+          size="small"
+          isFullWidth
           leftIcon="icn-save"
-          className="phone-number-pending-card__save-btn"
           onClick={onSave}
         >
           Salva
         </Button>
         <Button
           variant="outline"
-          size="medium"
+          size="small"
+          isFullWidth
           leftIcon="icn-close-small"
           className="phone-number-pending-card__discard-btn"
           onClick={onDiscard}

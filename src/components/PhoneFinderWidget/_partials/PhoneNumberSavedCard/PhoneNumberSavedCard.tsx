@@ -9,13 +9,13 @@ export const PhoneNumberSavedCard = ({
 }: TPhoneNumberSavedCardProps): JSX.Element => (
   <div className="phone-number-saved-card">
     <p className="phone-number-saved-card__badge">
-      <Icon name="icn-check" size={12} />
+      <Icon name="icn-check" size={14} />
       salvato sul contatto
     </p>
     <p className="phone-number-saved-card__number">{phoneNumber}</p>
     <Button
       variant="outline"
-      size="medium"
+      size="small"
       leftIcon="icn-error-outline"
       className="phone-number-saved-card__wrong-btn"
       onClick={onMarkWrong}

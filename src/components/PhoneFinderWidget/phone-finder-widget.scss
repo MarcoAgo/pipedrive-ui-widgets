@@ -1,21 +1,21 @@
 .phone-finder-widget {
   background: #ffffff;
-  border: 2px solid #1a1917;
-  border-radius: 16px;
-  box-shadow: 3px 3px 0 #1a1917;
+  border: 1px solid var(--border-subtle);
+  border-radius: 0;
+  box-shadow: 0 8px 16px rgba(25, 35, 62, 0.1);
   overflow: hidden;
 
   &__header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 16px 20px 12px;
+    padding: 14px 16px 10px;
   }
 
   &__title {
-    font-size: 20px;
-    font-weight: 700;
-    color: #1a1917;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--ink-700);
     margin: 0;
     letter-spacing: -0.01em;
   }
@@ -27,16 +27,16 @@
     padding: 4px;
     display: flex;
     align-items: center;
-    color: #6b6760;
+    color: #505962;
     border-radius: 4px;
     transition: background 0.15s;
 
     &:hover {
-      background: #f5f4f0;
+      background: var(--grey-5);
     }
 
     &:focus-visible {
-      outline: 2px solid #1a1917;
+      outline: 2px solid var(--ink-700);
       outline-offset: 2px;
     }
   }
@@ -50,35 +50,35 @@
   }
 
   &__body {
-    padding: 0 16px 20px;
+    padding: 2px 14px 16px;
     display: flex;
     flex-direction: column;
     gap: 10px;
   }
 
   &__empty {
-    font-size: 14px;
-    color: #9a9690;
+    font-size: 13px;
+    color: var(--grey-60);
     font-style: italic;
     text-align: center;
-    padding: 8px 0 4px;
+    margin: 6px 0 2px;
   }
 
   &__separator {
     border: none;
-    border-top: 1.5px dashed #d8d5ce;
+    border-top: 1px solid var(--grey-20);
     margin: 2px 0;
   }
 
   &__discarded-label {
     font-size: 13px;
-    color: #9a9690;
+    color: var(--grey-60);
     font-style: italic;
   }
 
   &__discarded-list {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
   }
 }
