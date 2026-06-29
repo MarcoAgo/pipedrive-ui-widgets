@@ -11,9 +11,7 @@ function App(): JSX.Element {
 
   useEffect(() => {
     async function initPipedrive(): Promise<void> {
-      const initializedSdk = await new AppExtensionsSDK().initialize({
-        size: { width: 500, height: 700 },
-      });
+      const initializedSdk = await new AppExtensionsSDK().initialize({});
       setSdk(initializedSdk);
 
       const result = await initializedSdk.execute(Command.GET_SIGNED_TOKEN);
