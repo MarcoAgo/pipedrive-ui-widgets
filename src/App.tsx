@@ -46,12 +46,12 @@ function App(): JSX.Element {
         entityId={context.entityId}
         onSearch={async () => {
           const { setStatus, setCurrentNumber } = phoneFinderStore.getState();
-          const person = pipedriveStore.getState().person;
-          if (!person) return;
+          const { person, context: ctx } = pipedriveStore.getState();
+          if (!person || !ctx?.entityId) return;
 
           setStatus('loading');
           try {
-            const result = await callN8nPhoneSearch(person);
+            const result = await callN8nPhoneSearch(person, ctx.entityId);
             setCurrentNumber(result.phone);
             setStatus('pending');
           } catch {

@@ -10,6 +10,7 @@ export interface TN8nPhoneSearchResponse {
 
 export async function callN8nPhoneSearch(
   person: TParsedPerson,
+  personId: string,
 ): Promise<TN8nPhoneSearchResponse> {
   const response = await fetch(N8N_WEBHOOK_URL, {
     method: 'POST',
@@ -18,6 +19,7 @@ export async function callN8nPhoneSearch(
       Authorization: `Basic ${btoa(`${N8N_WEBHOOK_USER}:${N8N_WEBHOOK_PASSWORD}`)}`,
     },
     body: JSON.stringify({
+      personId,
       firstName: person.firstName,
       lastName: person.lastName,
       linkedInUrl: person.linkedInUrl,
