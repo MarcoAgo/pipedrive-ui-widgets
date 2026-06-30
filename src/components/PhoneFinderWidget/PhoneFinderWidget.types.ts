@@ -3,5 +3,5 @@ import type { TPhoneFinderInitialData } from '../../store/phone-finder/phone-fin
 export interface TPhoneFinderWidgetProps {
   entityId: string;
   initialData?: TPhoneFinderInitialData;
-  onSearch: () => void;
+  onSearch: () => void | Promise<void>;
 }

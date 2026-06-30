@@ -1,20 +1,26 @@
 import { useEffect, type JSX } from 'react';
 import AppExtensionsSDK, { Command } from '@pipedrive/app-extensions-sdk';
-import { usePipedrive } from './store/use-pipedrive';
+import { pipedriveStore } from './store/pipedrive/pipedrive.store';
+import { usePipedrive } from './store/pipedrive/use-pipedrive';
 import { getPipedriveContext } from './helpers/get-pipedrive-context';
 import { fetchContextEntity } from './helpers/fetch-context-entity';
 import {
   parsePipedrivePerson,
   type TPipedrivePersonRaw,
 } from './helpers/parse-pipedrive-person';
+import { callN8nPhoneSearch } from './helpers/call-n8n-phone-search';
+import { phoneFinderStore } from './store/phone-finder/phone-finder.store';
 import { PhoneFinderWidget } from './components/PhoneFinderWidget';
 import './index.css';
 
 function App(): JSX.Element {
-  const { setSdk, setToken, setContext, setPerson, context } = usePipedrive();
+  const context = usePipedrive(s => s.context);
 
   useEffect(() => {
     async function initPipedrive(): Promise<void> {
+      const { setSdk, setToken, setContext, setPerson } =
+        pipedriveStore.getState();
+
       const initializedSdk = await new AppExtensionsSDK().initialize({});
       setSdk(initializedSdk);
 
@@ -38,10 +44,19 @@ function App(): JSX.Element {
     <div className="app-container">
       <PhoneFinderWidget
         entityId={context.entityId}
-        onSearch={() => {
-          // TODO: trigger n8n workflow 1 → on response call:
-          // phoneFinderStore.getState().setCurrentNumber(number)
-          // phoneFinderStore.getState().setStatus('pending')
+        onSearch={async () => {
+          const { setStatus, setCurrentNumber } = phoneFinderStore.getState();
+          const person = pipedriveStore.getState().person;
+          if (!person) return;
+
+          setStatus('loading');
+          try {
+            const result = await callN8nPhoneSearch(person);
+            setCurrentNumber(result.phone);
+            setStatus('pending');
+          } catch {
+            setStatus('idle');
+          }
         }}
       />
     </div>

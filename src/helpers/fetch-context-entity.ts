@@ -1,4 +1,4 @@
-import type { PipedriveContext } from '../store/use-pipedrive';
+import type { PipedriveContext } from '../store/pipedrive/pipedrive.types';
 
 const PROXY_URL = import.meta.env.VITE_PROXY_URL;
 

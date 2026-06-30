@@ -1,4 +1,4 @@
-import type { PipedriveContext } from '../store/use-pipedrive';
+import type { PipedriveContext } from '../store/pipedrive/pipedrive.types';
 
 export function getPipedriveContext(): PipedriveContext {
   const contextParams = new URLSearchParams(window.location.search);
