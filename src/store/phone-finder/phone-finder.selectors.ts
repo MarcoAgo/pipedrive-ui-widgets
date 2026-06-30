@@ -18,6 +18,8 @@ export const selectorPhoneFinderDiscardedNumbers = (
 export const selectorPhoneFinderRemainingAttempts = (
   s: TPhoneFinderModel,
 ): number => s.remainingAttempts;
+export const selectorPhoneFinderError = (s: TPhoneFinderModel): string | null =>
+  s.error;
 
 export const selectorPhoneFinderInitialize = (
   s: TPhoneFinderModel,

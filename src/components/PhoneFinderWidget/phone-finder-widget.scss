@@ -81,4 +81,19 @@
     flex-direction: column;
     gap: 6px;
   }
+
+  &__loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 0;
+    color: var(--ink-700);
+  }
+
+  &__error {
+    font-size: 13px;
+    color: var(--red-600, #c0392b);
+    text-align: center;
+    margin: 2px 0;
+  }
 }

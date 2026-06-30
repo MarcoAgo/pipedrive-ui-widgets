@@ -12,6 +12,7 @@ const INITIAL_STATE = {
   confirmedNumber: null,
   discardedNumbers: [] as string[],
   remainingAttempts: MAX_ATTEMPTS,
+  error: null as string | null,
 };
 
 export const phoneFinderStore = create<TPhoneFinderModel>((set, get) => ({
@@ -30,6 +31,8 @@ export const phoneFinderStore = create<TPhoneFinderModel>((set, get) => ({
   setStatus: status => set({ status }),
 
   setCurrentNumber: currentNumber => set({ currentNumber }),
+
+  setError: error => set({ error }),
 
   confirmNumber: () => {
     const { currentNumber } = get();

@@ -49,12 +49,17 @@ function App(): JSX.Element {
           const { person, context: ctx } = pipedriveStore.getState();
           if (!person || !ctx?.entityId) return;
 
+          const { setError } = phoneFinderStore.getState();
+          setError(null);
           setStatus('loading');
           try {
             const result = await callN8nPhoneSearch(person, ctx.entityId);
+            // eslint-disable-next-line no-console
+            console.log('[n8n phone search] response:', result);
             setCurrentNumber(result.phone);
             setStatus('pending');
           } catch {
+            setError('Ricerca non riuscita. Riprova.');
             setStatus('idle');
           }
         }}

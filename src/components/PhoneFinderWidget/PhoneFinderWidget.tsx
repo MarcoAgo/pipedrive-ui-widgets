@@ -8,6 +8,7 @@ import {
   selectorPhoneFinderConfirmedNumber,
   selectorPhoneFinderDiscardedNumbers,
   selectorPhoneFinderRemainingAttempts,
+  selectorPhoneFinderError,
   selectorPhoneFinderInitialize,
   selectorPhoneFinderConfirmNumber,
   selectorPhoneFinderDiscardNumber,
@@ -40,6 +41,7 @@ export const PhoneFinderWidget = ({
   const remainingAttempts = usePhoneFinder(
     selectorPhoneFinderRemainingAttempts,
   );
+  const error = usePhoneFinder(selectorPhoneFinderError);
   const initialize = usePhoneFinder(selectorPhoneFinderInitialize);
   const confirmNumber = usePhoneFinder(selectorPhoneFinderConfirmNumber);
   const discardNumber = usePhoneFinder(selectorPhoneFinderDiscardNumber);
@@ -80,54 +82,66 @@ export const PhoneFinderWidget = ({
 
       {!isCollapsed && (
         <div className="phone-finder-widget__body">
-          {isSaved && confirmedNumber && (
-            <PhoneNumberSavedCard
-              phoneNumber={confirmedNumber}
-              onMarkWrong={markWrong}
-            />
-          )}
-
-          {isPending && currentNumber && (
-            <PhoneNumberPendingCard
-              phoneNumber={currentNumber}
-              onSave={confirmNumber}
-              onDiscard={discardNumber}
-            />
-          )}
-
-          {showSeparator && <hr className="phone-finder-widget__separator" />}
-
-          {hasDiscarded && (
-            <div className="phone-finder-widget__discarded-list">
-              {isSaved && (
-                <span className="phone-finder-widget__discarded-label">
-                  {PHONE_FINDER_DISCARDED_LABEL}
-                </span>
-              )}
-              {discardedNumbers.map(number => (
-                <DiscardedPhoneRow
-                  key={number}
-                  phoneNumber={number}
-                  showUndo={!isSaved}
-                  onUndo={() => undoDiscard(number)}
-                />
-              ))}
+          {status === 'loading' ? (
+            <div className="phone-finder-widget__loading">
+              <Icon name="icn-loading" size={20} />
             </div>
-          )}
+          ) : (
+            <>
+              {isSaved && confirmedNumber && (
+                <PhoneNumberSavedCard
+                  phoneNumber={confirmedNumber}
+                  onMarkWrong={markWrong}
+                />
+              )}
 
-          {!isPending && !isSaved && !hasDiscarded && (
-            <p className="phone-finder-widget__empty">
-              {PHONE_FINDER_EMPTY_TEXT}
-            </p>
-          )}
+              {isPending && currentNumber && (
+                <PhoneNumberPendingCard
+                  phoneNumber={currentNumber}
+                  onSave={confirmNumber}
+                  onDiscard={discardNumber}
+                />
+              )}
 
-          {showSearchButton && (
-            <SearchPhoneButton
-              onSearch={onSearch}
-              remainingAttempts={remainingAttempts}
-              isLoading={status === 'loading'}
-              isRetry={isSearchRetry}
-            />
+              {showSeparator && (
+                <hr className="phone-finder-widget__separator" />
+              )}
+
+              {hasDiscarded && (
+                <div className="phone-finder-widget__discarded-list">
+                  {isSaved && (
+                    <span className="phone-finder-widget__discarded-label">
+                      {PHONE_FINDER_DISCARDED_LABEL}
+                    </span>
+                  )}
+                  {discardedNumbers.map(number => (
+                    <DiscardedPhoneRow
+                      key={number}
+                      phoneNumber={number}
+                      showUndo={!isSaved}
+                      onUndo={() => undoDiscard(number)}
+                    />
+                  ))}
+                </div>
+              )}
+
+              {!isPending && !isSaved && !hasDiscarded && (
+                <p className="phone-finder-widget__empty">
+                  {PHONE_FINDER_EMPTY_TEXT}
+                </p>
+              )}
+
+              {error && <p className="phone-finder-widget__error">{error}</p>}
+
+              {showSearchButton && (
+                <SearchPhoneButton
+                  onSearch={onSearch}
+                  remainingAttempts={remainingAttempts}
+                  isLoading={false}
+                  isRetry={isSearchRetry}
+                />
+              )}
+            </>
           )}
         </div>
       )}
