@@ -33,11 +33,12 @@ test('PhoneFinderWidget should show the search button on idle state', () => {
   ).toBeInTheDocument();
 });
 
-test('PhoneFinderWidget should show pending card when status is pending', () => {
+test('PhoneFinderWidget should show pending card when provider results arrive', () => {
   render(<PhoneFinderWidget entityId={ENTITY_ID} onSearch={vi.fn()} />);
   act(() => {
-    phoneFinderStore.getState().setCurrentNumber('+39 348 712 0099');
-    phoneFinderStore.getState().setStatus('pending');
+    phoneFinderStore
+      .getState()
+      .setProviderResults({ testProvider: ['+39 348 712 0099'] });
   });
   expect(screen.getByText('+39 348 712 0099')).toBeInTheDocument();
 });
@@ -58,4 +59,37 @@ test('PhoneFinderWidget should hide body when collapsed', () => {
   render(<PhoneFinderWidget entityId={ENTITY_ID} onSearch={vi.fn()} />);
   fireEvent.click(screen.getByRole('button', { name: /comprimi/i }));
   expect(screen.queryByText(/nessun numero/i)).not.toBeInTheDocument();
+});
+
+test('PhoneFinderWidget should skip duplicate numbers across providers', () => {
+  render(<PhoneFinderWidget entityId={ENTITY_ID} onSearch={vi.fn()} />);
+  act(() => {
+    phoneFinderStore.getState().setProviderResults({
+      providerA: ['+39 348 000 0001'],
+      providerB: ['+39 348 000 0001', '+39 348 000 0002'],
+    });
+  });
+  // First number shown
+  expect(screen.getByText('+39 348 000 0001')).toBeInTheDocument();
+  // Discard it
+  act(() => {
+    phoneFinderStore.getState().discardNumber();
+  });
+  // providerB's duplicate is skipped, shows next unique number
+  expect(screen.getByText('+39 348 000 0002')).toBeInTheDocument();
+});
+
+test('PhoneFinderWidget should show error when all numbers exhausted', () => {
+  render(<PhoneFinderWidget entityId={ENTITY_ID} onSearch={vi.fn()} />);
+  act(() => {
+    phoneFinderStore
+      .getState()
+      .setProviderResults({ providerA: ['+39 348 000 0001'] });
+  });
+  act(() => {
+    phoneFinderStore.getState().discardNumber();
+  });
+  expect(
+    screen.getByText(/nessun altro numero disponibile/i),
+  ).toBeInTheDocument();
 });

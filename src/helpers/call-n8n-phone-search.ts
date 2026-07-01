@@ -1,17 +1,14 @@
 import type { TParsedPerson } from './parse-pipedrive-person';
+import type { TProviderResults } from '../store/phone-finder/phone-finder.types';
 
 const N8N_WEBHOOK_URL = import.meta.env.VITE_N8N_WEBHOOK_URL;
 const N8N_WEBHOOK_USER = import.meta.env.VITE_N8N_WEBHOOK_USER;
 const N8N_WEBHOOK_PASSWORD = import.meta.env.VITE_N8N_WEBHOOK_PASSWORD;
 
-export interface TN8nPhoneSearchResponse {
-  phone: string;
-}
-
 export async function callN8nPhoneSearch(
   person: TParsedPerson,
   personId: string,
-): Promise<TN8nPhoneSearchResponse> {
+): Promise<TProviderResults> {
   const response = await fetch(N8N_WEBHOOK_URL, {
     method: 'POST',
     headers: {

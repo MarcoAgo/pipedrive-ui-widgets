@@ -1,7 +1,10 @@
 import type {
   TPhoneFinderModel,
   TPhoneFinderStatus,
+  TDiscardedEntry,
+  TProviderResults,
 } from './phone-finder.types';
+import { normalizePhone } from '../../helpers/normalize-phone';
 
 export const selectorPhoneFinderStatus = (
   s: TPhoneFinderModel,
@@ -9,36 +12,44 @@ export const selectorPhoneFinderStatus = (
 export const selectorPhoneFinderCurrentNumber = (
   s: TPhoneFinderModel,
 ): string | null => s.currentNumber;
+export const selectorPhoneFinderCurrentProvider = (
+  s: TPhoneFinderModel,
+): string | null => s.currentProvider;
 export const selectorPhoneFinderConfirmedNumber = (
   s: TPhoneFinderModel,
 ): string | null => s.confirmedNumber;
-export const selectorPhoneFinderDiscardedNumbers = (
+export const selectorPhoneFinderConfirmedProvider = (
   s: TPhoneFinderModel,
-): string[] => s.discardedNumbers;
-export const selectorPhoneFinderRemainingAttempts = (
+): string | null => s.confirmedProvider;
+export const selectorPhoneFinderDiscardedEntries = (
   s: TPhoneFinderModel,
-): number => s.remainingAttempts;
+): TDiscardedEntry[] => s.discardedEntries;
+export const selectorPhoneFinderProviderResults = (
+  s: TPhoneFinderModel,
+): TProviderResults => s.providerResults;
 export const selectorPhoneFinderError = (s: TPhoneFinderModel): string | null =>
   s.error;
+export const selectorPhoneFinderRemainingAttempts = (
+  s: TPhoneFinderModel,
+): number => {
+  const allNormalized = new Set(
+    Object.values(s.providerResults).flat().filter(Boolean).map(normalizePhone),
+  );
+  const discardedNormalized = new Set(
+    s.discardedEntries.map(e => normalizePhone(e.number)),
+  );
+  return allNormalized.size - discardedNormalized.size;
+};
 
 export const selectorPhoneFinderInitialize = (
   s: TPhoneFinderModel,
 ): TPhoneFinderModel['initialize'] => s.initialize;
-export const selectorPhoneFinderSetStatus = (
-  s: TPhoneFinderModel,
-): TPhoneFinderModel['setStatus'] => s.setStatus;
-export const selectorPhoneFinderSetCurrentNumber = (
-  s: TPhoneFinderModel,
-): TPhoneFinderModel['setCurrentNumber'] => s.setCurrentNumber;
 export const selectorPhoneFinderConfirmNumber = (
   s: TPhoneFinderModel,
 ): TPhoneFinderModel['confirmNumber'] => s.confirmNumber;
 export const selectorPhoneFinderDiscardNumber = (
   s: TPhoneFinderModel,
 ): TPhoneFinderModel['discardNumber'] => s.discardNumber;
-export const selectorPhoneFinderUndoDiscard = (
-  s: TPhoneFinderModel,
-): TPhoneFinderModel['undoDiscard'] => s.undoDiscard;
 export const selectorPhoneFinderMarkWrong = (
   s: TPhoneFinderModel,
 ): TPhoneFinderModel['markWrong'] => s.markWrong;

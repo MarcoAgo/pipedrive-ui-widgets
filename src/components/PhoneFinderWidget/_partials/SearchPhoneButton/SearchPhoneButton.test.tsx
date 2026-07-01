@@ -18,7 +18,7 @@ test('SearchPhoneButton should render Cerca un numero when not a retry', () => {
   ).toBeInTheDocument();
 });
 
-test('SearchPhoneButton should show remaining attempts when isRetry is true', () => {
+test('SearchPhoneButton should show remaining attempts when isRetry and attempts > 0', () => {
   render(
     <SearchPhoneButton
       onSearch={vi.fn()}
@@ -28,9 +28,8 @@ test('SearchPhoneButton should show remaining attempts when isRetry is true', ()
     />,
   );
   expect(
-    screen.getByRole('button', { name: /cerca ancora/i }),
+    screen.getByRole('button', { name: /cerca ancora \(2 rimasti\)/i }),
   ).toBeInTheDocument();
-  expect(screen.getByText(/2 tentativi rimasti/i)).toBeInTheDocument();
 });
 
 test('SearchPhoneButton should use singular form when 1 attempt remains', () => {
@@ -42,7 +41,21 @@ test('SearchPhoneButton should use singular form when 1 attempt remains', () => 
       isRetry={true}
     />,
   );
-  expect(screen.getByText(/1 tentativo rimasto/i)).toBeInTheDocument();
+  expect(screen.getByText(/1 rimasto/i)).toBeInTheDocument();
+});
+
+test('SearchPhoneButton should render Cerca di nuovo when isRetry and 0 attempts', () => {
+  render(
+    <SearchPhoneButton
+      onSearch={vi.fn()}
+      remainingAttempts={0}
+      isLoading={false}
+      isRetry={true}
+    />,
+  );
+  expect(
+    screen.getByRole('button', { name: /cerca di nuovo/i }),
+  ).toBeInTheDocument();
 });
 
 test('SearchPhoneButton should be disabled when isLoading is true', () => {
@@ -52,18 +65,6 @@ test('SearchPhoneButton should be disabled when isLoading is true', () => {
       remainingAttempts={3}
       isLoading={true}
       isRetry={false}
-    />,
-  );
-  expect(screen.getByRole('button')).toBeDisabled();
-});
-
-test('SearchPhoneButton should be disabled when remainingAttempts is 0', () => {
-  render(
-    <SearchPhoneButton
-      onSearch={vi.fn()}
-      remainingAttempts={0}
-      isLoading={false}
-      isRetry={true}
     />,
   );
   expect(screen.getByRole('button')).toBeDisabled();

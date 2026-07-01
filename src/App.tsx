@@ -13,6 +13,25 @@ import { phoneFinderStore } from './store/phone-finder/phone-finder.store';
 import { PhoneFinderWidget } from './components/PhoneFinderWidget';
 import './index.css';
 
+async function handleSearch(): Promise<void> {
+  const { setStatus, setError, setProviderResults } =
+    phoneFinderStore.getState();
+  const { person, context } = pipedriveStore.getState();
+  if (!person || !context?.entityId) return;
+
+  setError(null);
+  setStatus('loading');
+  try {
+    const result = await callN8nPhoneSearch(person, context.entityId);
+    // eslint-disable-next-line no-console
+    console.log('[n8n phone search] response:', result);
+    setProviderResults(result);
+  } catch {
+    setError('Ricerca non riuscita. Riprova.');
+    setStatus('idle');
+  }
+}
+
 function App(): JSX.Element {
   const context = usePipedrive(s => s.context);
 
@@ -42,28 +61,7 @@ function App(): JSX.Element {
 
   return (
     <div className="app-container">
-      <PhoneFinderWidget
-        entityId={context.entityId}
-        onSearch={async () => {
-          const { setStatus, setCurrentNumber } = phoneFinderStore.getState();
-          const { person, context: ctx } = pipedriveStore.getState();
-          if (!person || !ctx?.entityId) return;
-
-          const { setError } = phoneFinderStore.getState();
-          setError(null);
-          setStatus('loading');
-          try {
-            const result = await callN8nPhoneSearch(person, ctx.entityId);
-            // eslint-disable-next-line no-console
-            console.log('[n8n phone search] response:', result);
-            setCurrentNumber(result.phone);
-            setStatus('pending');
-          } catch {
-            setError('Ricerca non riuscita. Riprova.');
-            setStatus('idle');
-          }
-        }}
-      />
+      <PhoneFinderWidget entityId={context.entityId} onSearch={handleSearch} />
     </div>
   );
 }

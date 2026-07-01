@@ -1,18 +1,17 @@
 import { useEffect, useState, type JSX } from 'react';
-import { Icon } from '@reverse-hr/design-system';
+import { Icon, LoadingSpinner } from '@reverse-hr/design-system';
 import type { TPhoneFinderWidgetProps } from './PhoneFinderWidget.types';
 import { usePhoneFinder } from '../../store/phone-finder/use-phone-finder';
 import {
   selectorPhoneFinderStatus,
   selectorPhoneFinderCurrentNumber,
   selectorPhoneFinderConfirmedNumber,
-  selectorPhoneFinderDiscardedNumbers,
+  selectorPhoneFinderDiscardedEntries,
   selectorPhoneFinderRemainingAttempts,
   selectorPhoneFinderError,
   selectorPhoneFinderInitialize,
   selectorPhoneFinderConfirmNumber,
   selectorPhoneFinderDiscardNumber,
-  selectorPhoneFinderUndoDiscard,
   selectorPhoneFinderMarkWrong,
   selectorPhoneFinderReset,
 } from '../../store/phone-finder/phone-finder.selectors';
@@ -37,7 +36,7 @@ export const PhoneFinderWidget = ({
   const status = usePhoneFinder(selectorPhoneFinderStatus);
   const currentNumber = usePhoneFinder(selectorPhoneFinderCurrentNumber);
   const confirmedNumber = usePhoneFinder(selectorPhoneFinderConfirmedNumber);
-  const discardedNumbers = usePhoneFinder(selectorPhoneFinderDiscardedNumbers);
+  const discardedEntries = usePhoneFinder(selectorPhoneFinderDiscardedEntries);
   const remainingAttempts = usePhoneFinder(
     selectorPhoneFinderRemainingAttempts,
   );
@@ -45,7 +44,6 @@ export const PhoneFinderWidget = ({
   const initialize = usePhoneFinder(selectorPhoneFinderInitialize);
   const confirmNumber = usePhoneFinder(selectorPhoneFinderConfirmNumber);
   const discardNumber = usePhoneFinder(selectorPhoneFinderDiscardNumber);
-  const undoDiscard = usePhoneFinder(selectorPhoneFinderUndoDiscard);
   const markWrong = usePhoneFinder(selectorPhoneFinderMarkWrong);
   const reset = usePhoneFinder(selectorPhoneFinderReset);
 
@@ -56,10 +54,11 @@ export const PhoneFinderWidget = ({
 
   const isPending = status === 'pending';
   const isSaved = status === 'saved';
-  const hasDiscarded = discardedNumbers.length > 0;
-  const showSeparator = hasDiscarded;
-  const showSearchButton = !isSaved && remainingAttempts > 0;
-  const isSearchRetry = hasDiscarded || isPending;
+  const isLoading = status === 'loading';
+  const hasDiscarded = discardedEntries.length > 0;
+  const showEmptyState = !isPending && !isSaved && !hasDiscarded && !error;
+  const showSeparator = hasDiscarded && (isPending || isSaved);
+  const showSearchButton = status === 'idle';
 
   return (
     <div className="phone-finder-widget">
@@ -82,9 +81,9 @@ export const PhoneFinderWidget = ({
 
       {!isCollapsed && (
         <div className="phone-finder-widget__body">
-          {status === 'loading' ? (
+          {isLoading ? (
             <div className="phone-finder-widget__loading">
-              <Icon name="icn-loading" size={20} />
+              <LoadingSpinner />
             </div>
           ) : (
             <>
@@ -114,18 +113,17 @@ export const PhoneFinderWidget = ({
                       {PHONE_FINDER_DISCARDED_LABEL}
                     </span>
                   )}
-                  {discardedNumbers.map(number => (
+                  {discardedEntries.map(entry => (
                     <DiscardedPhoneRow
-                      key={number}
-                      phoneNumber={number}
-                      showUndo={!isSaved}
-                      onUndo={() => undoDiscard(number)}
+                      key={entry.number}
+                      phoneNumber={entry.number}
+                      showUndo={false}
                     />
                   ))}
                 </div>
               )}
 
-              {!isPending && !isSaved && !hasDiscarded && (
+              {showEmptyState && (
                 <p className="phone-finder-widget__empty">
                   {PHONE_FINDER_EMPTY_TEXT}
                 </p>
@@ -138,7 +136,7 @@ export const PhoneFinderWidget = ({
                   onSearch={onSearch}
                   remainingAttempts={remainingAttempts}
                   isLoading={false}
-                  isRetry={isSearchRetry}
+                  isRetry={hasDiscarded}
                 />
               )}
             </>
