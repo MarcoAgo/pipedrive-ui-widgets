@@ -4,4 +4,5 @@ export interface TPhoneFinderWidgetProps {
   entityId: string;
   initialData?: TPhoneFinderInitialData;
   onSearch: () => void | Promise<void>;
+  onConfirm?: (phone: string) => void | Promise<void>;
 }

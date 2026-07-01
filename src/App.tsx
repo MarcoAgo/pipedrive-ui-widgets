@@ -9,9 +9,16 @@ import {
   type TPipedrivePersonRaw,
 } from './helpers/parse-pipedrive-person';
 import { callN8nPhoneSearch } from './helpers/call-n8n-phone-search';
+import { savePersonPhone } from './helpers/save-person-phone';
 import { phoneFinderStore } from './store/phone-finder/phone-finder.store';
 import { PhoneFinderWidget } from './components/PhoneFinderWidget';
 import './index.css';
+
+async function handleConfirm(phone: string): Promise<void> {
+  const { context } = pipedriveStore.getState();
+  if (!context?.entityId || !context?.companyId) return;
+  await savePersonPhone(context.entityId, context.companyId, phone);
+}
 
 async function handleSearch(): Promise<void> {
   const { setStatus, setError, setProviderResults } =
@@ -61,7 +68,11 @@ function App(): JSX.Element {
 
   return (
     <div className="app-container">
-      <PhoneFinderWidget entityId={context.entityId} onSearch={handleSearch} />
+      <PhoneFinderWidget
+        entityId={context.entityId}
+        onSearch={handleSearch}
+        onConfirm={handleConfirm}
+      />
     </div>
   );
 }

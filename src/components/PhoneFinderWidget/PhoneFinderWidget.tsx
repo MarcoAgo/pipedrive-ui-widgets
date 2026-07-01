@@ -30,6 +30,7 @@ export const PhoneFinderWidget = ({
   entityId,
   initialData,
   onSearch,
+  onConfirm,
 }: TPhoneFinderWidgetProps): JSX.Element => {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
@@ -56,6 +57,12 @@ export const PhoneFinderWidget = ({
   const isSaved = status === 'saved';
   const isLoading = status === 'loading';
   const hasDiscarded = discardedEntries.length > 0;
+  function handleSave(): void {
+    if (!currentNumber) return;
+    confirmNumber();
+    onConfirm?.(currentNumber);
+  }
+
   const showEmptyState = !isPending && !isSaved && !hasDiscarded && !error;
   const showSeparator = hasDiscarded && (isPending || isSaved);
   const showSearchButton = status === 'idle';
@@ -97,7 +104,7 @@ export const PhoneFinderWidget = ({
               {isPending && currentNumber && (
                 <PhoneNumberPendingCard
                   phoneNumber={currentNumber}
-                  onSave={confirmNumber}
+                  onSave={handleSave}
                   onDiscard={discardNumber}
                 />
               )}
