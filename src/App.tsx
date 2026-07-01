@@ -14,33 +14,39 @@ import { phoneFinderStore } from './store/phone-finder/phone-finder.store';
 import { PhoneFinderWidget } from './components/PhoneFinderWidget';
 import './index.css';
 
-async function handleConfirm(phone: string): Promise<void> {
-  const { context } = pipedriveStore.getState();
-  if (!context?.entityId || !context?.companyId) return;
-  await savePersonPhone(context.entityId, context.companyId, phone);
-}
-
-async function handleSearch(): Promise<void> {
-  const { setStatus, setError, setProviderResults } =
-    phoneFinderStore.getState();
-  const { person, context } = pipedriveStore.getState();
-  if (!person || !context?.entityId) return;
-
-  setError(null);
-  setStatus('loading');
-  try {
-    const result = await callN8nPhoneSearch(person, context.entityId);
-    // eslint-disable-next-line no-console
-    console.log('[n8n phone search] response:', result);
-    setProviderResults(result);
-  } catch {
-    setError('Ricerca non riuscita. Riprova.');
-    setStatus('idle');
-  }
-}
-
 function App(): JSX.Element {
   const context = usePipedrive(s => s.context);
+
+  async function handleConfirm(phone: string): Promise<void> {
+    const { context: ctx } = pipedriveStore.getState();
+    // eslint-disable-next-line no-console
+    console.log('[phone-finder] handleConfirm', {
+      phone,
+      entityId: ctx?.entityId,
+      companyId: ctx?.companyId,
+    });
+    if (!ctx?.entityId || !ctx?.companyId) return;
+    await savePersonPhone(ctx.entityId, ctx.companyId, phone);
+  }
+
+  async function handleSearch(): Promise<void> {
+    const { setStatus, setError, setProviderResults } =
+      phoneFinderStore.getState();
+    const { person, context: ctx } = pipedriveStore.getState();
+    if (!person || !ctx?.entityId) return;
+
+    setError(null);
+    setStatus('loading');
+    try {
+      const result = await callN8nPhoneSearch(person, ctx.entityId);
+      // eslint-disable-next-line no-console
+      console.log('[n8n phone search] response:', result);
+      setProviderResults(result);
+    } catch {
+      setError('Ricerca non riuscita. Riprova.');
+      setStatus('idle');
+    }
+  }
 
   useEffect(() => {
     async function initPipedrive(): Promise<void> {
